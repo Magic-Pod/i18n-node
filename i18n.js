@@ -384,7 +384,7 @@ module.exports = (function() {
   };
 
   i18n.setLocale = function i18nSetLocale(object, locale, skipImplicitObjects) {
-
+    console.log({object, locale, skipImplicitObjects});
     // when given an array of objects => setLocale on each
     if (Array.isArray(object) && typeof locale === 'string') {
       for (var i = object.length - 1; i >= 0; i--) {
@@ -399,20 +399,25 @@ module.exports = (function() {
 
     // called like req.setLocale('en') or i18n.setLocale('en')
     if (locale === undefined && typeof object === 'string') {
+      console.log('AA1');
       targetObject = this;
       targetLocale = object;
     }
 
     // consider a fallback
+    console.log('AA2');
     if (!locales[targetLocale] && fallbacks[targetLocale]) {
+      console.log('AA21');
       targetLocale = fallbacks[targetLocale];
     }
 
     // now set locale on object
+    console.log('AA3');
     targetObject.locale = locales[targetLocale] ? targetLocale : defaultLocale;
 
     // consider any extra registered objects
     if (typeof register === 'object') {
+      console.log('AA4');
       if (Array.isArray(register) && !skipImplicitObjects) {
         register.forEach(function(r) {
           r.locale = targetObject.locale;
@@ -424,7 +429,7 @@ module.exports = (function() {
 
     // consider res
     if (targetObject.res && !skipImplicitObjects) {
-
+      console.log('AA5');
       // escape recursion
       // @see  - https://github.com/balderdashy/sails/pull/3631
       //       - https://github.com/mashpie/i18n-node/pull/218
@@ -438,14 +443,17 @@ module.exports = (function() {
 
     // consider locals
     if (targetObject.locals && !skipImplicitObjects) {
+      console.log('AA6');
 
       // escape recursion
       // @see  - https://github.com/balderdashy/sails/pull/3631
       //       - https://github.com/mashpie/i18n-node/pull/218
       if (targetObject.locals.res) {
+        console.log('AA7');
         i18n.setLocale(targetObject.locals, targetObject.locale, true);
         i18n.setLocale(targetObject.locals.res, targetObject.locale, true);
       } else {
+        console.log('AA8');
         i18n.setLocale(targetObject.locals, targetObject.locale);
       }
     }
